@@ -23,29 +23,34 @@ variable "region" {
   type = string
 }
 
-variable "app_service_plan_sku_name" {
+variable "instance" {
   type = string
 }
 
-variable "app_service_plan_instance" {
+variable "sku" {
   type = string
 }
 
-variable "apps" {
-  type = map(object({
-    instance   = string
-    private_ip = string
-  }))
+variable "replica_count" {
+  type = number
+}
+
+variable "partition_count" {
+  type = number
 }
 
 variable "private_endpoint_subnet_id" {
   type = string
 }
 
-variable "private_dns_zone_id" {
+variable "private_dns_zone_name" {
   type = string
 }
 
-variable "app_insights_connection_strings" {
-  type = map(string)
+variable "vnet_id" {
+  type = string
+}
+
+variable "private_endpoint_ip" {
+  type = string
 }
