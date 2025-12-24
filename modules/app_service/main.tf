@@ -93,6 +93,13 @@ resource "azurerm_linux_web_app" "this" {
   }
 }
 
+resource "azurerm_app_service_virtual_network_swift_connection" "this" {
+  for_each       = var.apps
+  app_service_id = azurerm_linux_web_app.this[each.key].id
+  subnet_id      = var.vnet_integration_subnet_id
+  depends_on     = [azurerm_linux_web_app.this]
+}
+
 resource "azurerm_private_endpoint" "this" {
   for_each            = var.apps
   name                = "pep-${var.workload}-${var.environment}-${each.key}-${each.value.instance}"
