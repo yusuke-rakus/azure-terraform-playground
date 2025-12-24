@@ -22,12 +22,12 @@ vnet_integration_route_next_hop_type  = "VirtualAppliance"
 vnet_integration_route_next_hop_ip    = "10.255.0.4"
 vnet_peerings = [
   {
-    name                = "acr-rg"
-    resource_group_name = "vnet-jpe-acr-001"
+    name                = "vnet-jpe-acr-001"
+    resource_group_name = "acr-rg"
   },
   {
-    name                = "fw-rg"
-    resource_group_name = "vnet-jpw-fw-001"
+    name                = "vnet-jpw-fw-001"
+    resource_group_name = "fw-rg"
   }
 ]
 vnet_peering_allow_virtual_network_access = true
@@ -108,4 +108,4 @@ storage_account = {
 # ACR 参照先
 ################################################################################
 acr_resource_group_name = "acr-rg"
-acr_name                = "acrname"
+acr_name                = "terraformacr"

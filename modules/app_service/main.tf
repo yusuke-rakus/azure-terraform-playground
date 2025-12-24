@@ -30,6 +30,8 @@ resource "azurerm_linux_web_app" "this" {
   }
 
   site_config {
+    ip_restriction_default_action     = "Deny"
+    scm_ip_restriction_default_action = "Deny"
     dynamic "ip_restriction" {
       for_each = var.access_restriction_allow_100
       content {
@@ -60,47 +62,33 @@ resource "azurerm_linux_web_app" "this" {
       }
     }
 
-    scm_ip_restriction {
-      name       = "deny-all"
-      action     = "Deny"
-      priority   = 400
-      ip_address = "0.0.0.0/0"
-    }
-
     dynamic "scm_ip_restriction" {
       for_each = var.access_restriction_allow_100
       content {
-        name       = "scm-allow-100-${ip_restriction.value}"
+        name       = "scm-allow-100-${scm_ip_restriction.value}"
         action     = "Allow"
         priority   = 100
-        ip_address = ip_restriction.value
+        ip_address = scm_ip_restriction.value
       }
     }
 
     dynamic "scm_ip_restriction" {
       for_each = var.access_restriction_allow_200
       content {
-        name       = "scm-allow-200-${ip_restriction.value}"
+        name       = "scm-allow-200-${scm_ip_restriction.value}"
         action     = "Allow"
         priority   = 200
-        ip_address = ip_restriction.value
+        ip_address = scm_ip_restriction.value
       }
     }
     dynamic "scm_ip_restriction" {
       for_each = var.access_restriction_allow_300
       content {
-        name       = "scm-allow-300-${ip_restriction.value}"
+        name       = "scm-allow-300-${scm_ip_restriction.value}"
         action     = "Allow"
         priority   = 300
-        ip_address = ip_restriction.value
+        ip_address = scm_ip_restriction.value
       }
-    }
-
-    scm_ip_restriction {
-      name       = "scm-deny-all"
-      action     = "Deny"
-      priority   = 400
-      ip_address = "0.0.0.0/0"
     }
   }
 }

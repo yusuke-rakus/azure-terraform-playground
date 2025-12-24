@@ -72,34 +72,25 @@ terraform apply -state=".tfstate/dev.tfstate" ".tfstate/dev.tfplan"
 
 ## **Destroy（環境削除）**
 
-### **削除前に destroy plan を確認（強く推奨）**
+### **削除前に destroy plan を作成（必須）**
 
 ```
 terraform plan -destroy -var-file="env/dev.tfvars" -state=".tfstate/dev.tfstate" -out=".tfstate/dev.destroy.tfplan"
 ```
 
 - 削除対象のリソースを事前に確認できます
-- 本番・共有環境では必須です
+- 指定した環境（例：dev）のみが対象になります
 
 ---
 
-### **環境を削除する**
+### **destroy plan を適用して削除**
 
 ```
 terraform apply -state=".tfstate/dev.tfstate" ".tfstate/dev.destroy.tfplan"
 ```
 
-- 指定した環境（例：dev）のみが削除されます
-- -var-file を指定しない destroy は **非常に危険**です
-
----
-
-### **Destroy も plan を固定する場合（推奨）**
-
-```
-terraform plan -destroy -var-file="env/dev.tfvars" -out=tfplan-destroy
-terraform apply tfplan-destroy
-```
+- Plan 時の内容そのままで削除されます
+- 直接 `terraform destroy` は使用しません
 
 ---
 
@@ -124,5 +115,6 @@ terraform plan -var-file="env/dev.tfvars" -state=".tfstate/dev.tfstate" -out=".t
 terraform apply -state=".tfstate/dev.tfstate" ".tfstate/dev.tfplan"
 
 # destroy
-terraform destroy -var-file="env/dev.tfvars"
+terraform plan -destroy -var-file="env/dev.tfvars" -state=".tfstate/dev.tfstate" -out=".tfstate/dev.destroy.tfplan"
+terraform apply -state=".tfstate/dev.tfstate" ".tfstate/dev.destroy.tfplan"
 ```
