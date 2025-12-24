@@ -1,12 +1,44 @@
+#################################################################
+# 基本設定
+#################################################################
 subscription_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 workload        = "terraform-playground"
 environment     = "test"
 location        = "Japan West"
 location_short  = "jpw"
+tags = {
+  Project = "terraform-playground"
+}
 
-vnet_scope    = "spoke"
-vnet_instance = "001"
 
+#################################################################
+# ネットワーク (VNet / ピアリング / 経路)
+#################################################################
+vnet_scope                            = "spoke"
+vnet_instance                         = "001"
+vnet_integration_subnet_address_space = ["10.26.2.64/27"]
+vnet_integration_route_prefix         = "0.0.0.0/0"
+vnet_integration_route_next_hop_type  = "VirtualAppliance"
+vnet_integration_route_next_hop_ip    = "10.255.0.4"
+vnet_peerings = [
+  {
+    name                = "acr-rg"
+    resource_group_name = "vnet-jpe-acr-001"
+  },
+  {
+    name                = "fw-rg"
+    resource_group_name = "vnet-jpw-fw-001"
+  }
+]
+vnet_peering_allow_virtual_network_access = true
+vnet_peering_allow_forwarded_traffic      = false
+vnet_peering_allow_gateway_transit        = false
+vnet_peering_use_remote_gateways          = false
+
+
+################################################################################
+# App Service ごとの設定
+################################################################################
 app_services = {
   front = {
     instance   = "001"
@@ -22,10 +54,18 @@ app_services = {
   }
 }
 
-tags = {
-  Project = "terraform-playground"
-}
 
+################################################################################
+# アクセス制限（必要に応じて許可リストを設定）
+################################################################################
+access_restriction_allow_100 = []
+access_restriction_allow_200 = []
+access_restriction_allow_300 = []
+
+
+################################################################################
+# PostgreSQL Flexible Server
+################################################################################
 postgresql = {
   instance               = "001"
   server_version         = "14"
@@ -38,6 +78,10 @@ postgresql = {
   private_dns_zone_name  = "privatelink.postgres.database.azure.com"
 }
 
+
+################################################################################
+# Azure AI Search
+################################################################################
 search_service = {
   instance              = "001"
   sku                   = "basic"
@@ -47,6 +91,10 @@ search_service = {
   private_dns_zone_name = "privatelink.search.windows.net"
 }
 
+
+################################################################################
+# Storage Account
+################################################################################
 storage_account = {
   instance                 = "001"
   account_tier             = "Standard"
@@ -54,3 +102,10 @@ storage_account = {
   private_endpoint_ip      = "10.26.2.41"
   private_dns_zone_name    = "privatelink.blob.core.windows.net"
 }
+
+
+################################################################################
+# ACR 参照先
+################################################################################
+acr_resource_group_name = "acr-rg"
+acr_name                = "acrname"

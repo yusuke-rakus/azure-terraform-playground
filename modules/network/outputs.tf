@@ -10,6 +10,10 @@ output "private_endpoint_subnet_id" {
   value = azurerm_subnet.private_endpoint.id
 }
 
+output "vnet_integration_subnet_id" {
+  value = azurerm_subnet.vnet_integration.id
+}
+
 output "private_dns_zone_id" {
   value = azurerm_private_dns_zone.app_service.id
 }
